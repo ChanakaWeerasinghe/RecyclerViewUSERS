@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements UsersAdapter.Cont
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, DividerItemDecoration.VERTICAL, 36));
         recyclerView.setAdapter(mAdapter);
-
+        Log.d("response","response");
         fetchContacts();
     }
 
@@ -73,11 +74,14 @@ public class MainActivity extends AppCompatActivity implements UsersAdapter.Cont
     private void fetchContacts() {
 
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("response",response.toString());
                         if (response == null) {
                             Toast.makeText(getApplicationContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
                             return;
@@ -102,16 +106,16 @@ public class MainActivity extends AppCompatActivity implements UsersAdapter.Cont
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
+                        // TODO: Handle error
 
                     }
                 });
 
-
-        MyApplication.getInstance().addToRequestQueue(jsObjRequest);
-
-
+// Access the RequestQueue through your singleton class.
+//        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
 //
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+
 //        JsonObjectRequest request = new JsonObjectRequest(URL,
 //                new Response.Listener<JsonObject>() {
 //                    @Override
@@ -218,6 +222,6 @@ public class MainActivity extends AppCompatActivity implements UsersAdapter.Cont
 
     @Override
     public void onContactSelected(Users contact) {
-        Toast.makeText(getApplicationContext(), "Selected: " + contact.getName() + ", " + contact.getPhone(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Selected: " + contact.getFirst_name() + ", " + contact.getLast_name(), Toast.LENGTH_LONG).show();
     }
 }
